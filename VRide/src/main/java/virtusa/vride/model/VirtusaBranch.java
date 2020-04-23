@@ -1,4 +1,4 @@
-package model;
+package virtusa.vride.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

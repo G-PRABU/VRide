@@ -1,18 +1,29 @@
-package model;
+package virtusa.vride.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 public class User {
- 
-	@OneToOne
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+    private Long userId;
+	
+    @OneToOne
 	private Employee employee;
 	
-	@NotNull
+    @NotNull
 	private String userPassword;
+	
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 	
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
@@ -24,6 +35,10 @@ public class User {
 	
 	public Employee getEmployee() {
 		return employee;
+	}
+	
+	public Long getUserId() {
+		return userId;
 	}
 	
 	public boolean isMatches(String password) {

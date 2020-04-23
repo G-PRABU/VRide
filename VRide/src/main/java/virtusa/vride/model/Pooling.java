@@ -1,6 +1,6 @@
-package model;
+package virtusa.vride.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +22,7 @@ public class Pooling {
 	private Location startLocation;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Timestamp startTime;
+	private Date startTime;
 	
 	@ManyToOne
 	private VirtusaBranch destinationLocation;
@@ -44,7 +44,7 @@ public class Pooling {
 		this.startLocation = startLocation;
 	}
 	
-	public void setStartTime(Timestamp startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 	
@@ -72,7 +72,7 @@ public class Pooling {
 		return startLocation;
 	}
 	
-	public Timestamp getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
 	
