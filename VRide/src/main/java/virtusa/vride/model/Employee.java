@@ -8,6 +8,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Range;
+
 @Entity
 public class Employee {
 
@@ -20,11 +22,19 @@ public class Employee {
 	@NotNull
 	private String empEmail;
 	
+	@NotNull
+	@Range(min=0 , max=3)
+	private Integer empGender;
+	
 	@Temporal(TemporalType.DATE)
 	private Date empDOB;
 	
 	public void setEmpId(String empId) {
 		this.empId = empId;
+	}
+	
+	public void setEmpGender(Integer empGender) {
+		this.empGender = empGender;
 	}
 	
 	public void setEmpName(String empName) {
@@ -43,6 +53,10 @@ public class Employee {
 		return empId;
 	}
 	
+	public Integer getEmpGender() {
+		return empGender;
+	}
+	
 	public String getEmpName() {
 		return empName;
 	}
@@ -54,5 +68,6 @@ public class Employee {
 	public Date getEmpDOB() {
 		return empDOB;
 	}
+	
 	
 }

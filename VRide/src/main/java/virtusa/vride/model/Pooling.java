@@ -24,6 +24,9 @@ public class Pooling {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startTime;
 	
+	@NotNull
+	private Float costPerHead;
+	
 	@ManyToOne
 	private VirtusaBranch destinationLocation;
 	
@@ -38,6 +41,10 @@ public class Pooling {
 	
 	public void setPoolingId(Long poolingId) {
 		this.poolingId = poolingId;
+	}
+	
+	public void setCostPerHead(Float costPerHead) {
+		this.costPerHead = costPerHead;
 	}
 	
 	public void setStartLocation(Location startLocation) {
@@ -68,6 +75,9 @@ public class Pooling {
 		return poolingId;
 	}
 	
+	public Float getCostPerHead() {
+		return costPerHead;
+	}
 	public Location getStartLocation() {
 		return startLocation;
 	}

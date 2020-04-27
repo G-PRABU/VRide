@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 public class User {
@@ -30,7 +29,7 @@ public class User {
 	}
 	
 	public void setUserPassword(String userPassword) {
-		this.userPassword = new BCryptPasswordEncoder().encode(userPassword);
+		this.userPassword = userPassword;
 	}
 	
 	public Employee getEmployee() {
@@ -42,6 +41,6 @@ public class User {
 	}
 	
 	public boolean isMatches(String password) {
-		return new BCryptPasswordEncoder().matches(password, userPassword);
+		return userPassword.equals(password);
 	}
 }

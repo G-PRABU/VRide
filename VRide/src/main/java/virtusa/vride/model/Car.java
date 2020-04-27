@@ -20,6 +20,9 @@ public class Car {
 	@NotNull
 	private String carModel;
 	
+	@NotNull
+	private String carRegisterNumber;
+	
 	@ManyToOne
 	private Employee employee;
 
@@ -33,6 +36,10 @@ public class Car {
 	
 	public void setCarModel(String carModel) {
 		this.carModel = carModel;
+	}
+	
+	public void setCarRegisterNumber(String carRegisterNumber) {
+		this.carRegisterNumber = carRegisterNumber;
 	}
 	
 	public void setEmployee(Employee employee) {
@@ -49,6 +56,10 @@ public class Car {
 	
 	public String getCarModel() {
 		return carModel;
+	}
+	
+	public String getCarRegisterNumber() {
+		return carRegisterNumber;
 	}
 	
 	public Employee getEmployee() {
