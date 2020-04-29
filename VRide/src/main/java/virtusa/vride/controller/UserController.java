@@ -49,10 +49,22 @@ public class UserController {
 		return employeeRepository.findAll();
 	}
 	
-	@PostMapping("/user/signup")
-	ResponseEntity<Employee> createUer(@Valid @RequestBody User user) throws URISyntaxException{
-	    User result = userRepository.save(user);
-	    return ResponseEntity.created(new URI("/api/employee" + result.getEmployee().getEmpId())).body(result.getEmployee()); 
+	@PostMapping("/user/signup/{empid}/{pass}")
+	ResponseEntity<?> createUer(@PathVariable String empid,@PathVariable String pass) throws URISyntaxException{
+		if(employeeRepository.findById(empid).isPresent()){
+			if(!userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
+		        User user = new User();
+		        user.setEmployee(employeeRepository.findByEmpId(empid));
+		        user.setUserPassword(pass);
+	            User result = userRepository.save(user);
+	            return ResponseEntity.created(new URI("/api/employee" + result.getEmployee().getEmpId())).body(result.getEmployee()); 
+		
+			} else {
+			    return new ResponseEntity<>(HttpStatus.FOUND);	
+			} 
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping("/user/login/{empid}/{pass}")
