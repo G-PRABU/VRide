@@ -3,6 +3,7 @@ package virtusa.vride.controller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -27,6 +28,7 @@ import virtusa.vride.repository.CarRepository;
 import virtusa.vride.repository.EmployeeRepository;
 import virtusa.vride.repository.LocationRepository;
 import virtusa.vride.repository.UserRepository;
+import virtusa.vride.services.OtpService;
 
 @RestController
 @RequestMapping("/api")
@@ -44,27 +46,58 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private OtpService otpService;
+	
 	@GetMapping("/employees")
 	Collection<Employee> getEmployees(){
 		return employeeRepository.findAll();
 	}
 	
-	@PostMapping("/user/signup/{empid}/{pass}")
-	ResponseEntity<?> createUer(@PathVariable String empid,@PathVariable String pass) throws URISyntaxException{
+	@PostMapping("/user/signup/getOtp/{empid}")
+	ResponseEntity<?> getOtp(@PathVariable String empid) throws URISyntaxException{
+		HashMap<String,Object> response= new HashMap<>(); 
 		if(employeeRepository.findById(empid).isPresent()){
-			if(!userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
-		        User user = new User();
-		        user.setEmployee(employeeRepository.findByEmpId(empid));
-		        user.setUserPassword(pass);
-	            User result = userRepository.save(user);
-	            return ResponseEntity.created(new URI("/api/employee" + result.getEmployee().getEmpId())).body(result.getEmployee()); 
-		
+	  		if(!userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
+	  			Integer otp = otpService.generateOtp(empid);
+	  			if(otp==-1) {
+	  				return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+	  			}
+	  			response.put("email", employeeRepository.findByEmpId(empid).getEmpEmail());
+		        response.put(empid, otp);
+		        return ResponseEntity.ok().body(response);
 			} else {
 			    return new ResponseEntity<>(HttpStatus.FOUND);	
 			} 
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@PostMapping("/user/signup/verifyOtp/{empid}")
+	ResponseEntity<?> verifyOtp(@PathVariable String empid,@RequestBody HashMap<String,Integer> request) throws URISyntaxException{
+		if(employeeRepository.findById(empid).isPresent()){
+	  		Boolean isValid = otpService.validateOTP(empid, request.get(empid));
+	  		if(isValid) {
+	  			return ResponseEntity.ok().body(employeeRepository.findByEmpId(empid));
+	  		} else {
+	  			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	  		}
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PostMapping("/user/signup/")
+	ResponseEntity<?> createUser(@RequestBody HashMap<String,String> request) throws URISyntaxException{
+		if(employeeRepository.findById(request.get("id")).isPresent()) {
+			User user = new User();
+			user.setEmployee(employeeRepository.findByEmpId(request.get("id")));
+			user.setUserPassword(request.get("password"));
+			userRepository.save(user);
+			return ResponseEntity.ok().body(employeeRepository.findByEmpId(request.get("id")));
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping("/user/login/{empid}/{pass}")
