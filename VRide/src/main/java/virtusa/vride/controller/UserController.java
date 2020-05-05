@@ -49,11 +49,6 @@ public class UserController {
 	@Autowired
 	private OtpService otpService;
 	
-	@GetMapping("/employees")
-	Collection<Employee> getEmployees(){
-		return employeeRepository.findAll();
-	}
-	
 	@PostMapping("/user/signup/getOtp/{empid}")
 	ResponseEntity<?> getOtp(@PathVariable String empid) throws URISyntaxException{
 		HashMap<String,Object> response= new HashMap<>(); 
@@ -133,6 +128,12 @@ public class UserController {
 	
 	@GetMapping("/{empid}/locations")
 	Collection<Location> getLocations(@PathVariable String empid){
+	    return 	locationRepository.findByEmployee(employeeRepository.findByEmpId(empid));
+	}
+	
+	@DeleteMapping("{empid}/locations/{id}")
+	Collection<Location> deleteLocations(@PathVariable String empid,@PathVariable Long id){
+		locationRepository.deleteById(id);
 	    return 	locationRepository.findByEmployee(employeeRepository.findByEmpId(empid));
 	}
 	

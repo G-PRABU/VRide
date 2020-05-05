@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import virtusa.vride.model.Pooling;
 import virtusa.vride.model.Rider;
+import virtusa.vride.model.VirtusaBranch;
+import virtusa.vride.repository.EmployeeRepository;
 import virtusa.vride.repository.PoolingRepository;
 import virtusa.vride.repository.RiderRepository;
 import virtusa.vride.repository.VirtusaBranchRepository;
@@ -36,7 +38,16 @@ public class PoolingController {
     @Autowired
     private RiderRepository riderRepository;
     
-	@PostMapping("/add/pooling")
+	@Autowired
+	private EmployeeRepository employeeRepository;
+	
+	
+	@GetMapping("/pooling/destination")
+	public Collection<VirtusaBranch> getDistination() {
+		return virtusaBranchRepository.findAll();
+	}
+	
+    @PostMapping("/add/pooling")
     public ResponseEntity<Pooling> createPooling(@Valid @RequestBody Pooling pooling) throws URISyntaxException{
         Pooling result = poolingRepository.save(pooling);
         return ResponseEntity.created(new URI("/api/pooling" + result.getPoolingId())).body(result); 
@@ -45,6 +56,11 @@ public class PoolingController {
     @GetMapping("/poolings/{id}")
     public Collection<Pooling> getPoolings(@PathVariable Long id){
     	return poolingRepository.findByDestinationLocation(virtusaBranchRepository.findByBranchId(id));
+    }
+    
+    @GetMapping("/poolings/{empid}")
+    public Collection<Pooling> getUserPoolings(@PathVariable String empid){
+    	return poolingRepository.findByEmployee(employeeRepository.findByEmpId(empid));
     }
     
     @PutMapping("/update/pooling/")

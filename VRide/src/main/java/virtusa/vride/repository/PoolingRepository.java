@@ -4,10 +4,12 @@ import java.util.Collection;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import virtusa.vride.model.Employee;
 import virtusa.vride.model.Pooling;
 import virtusa.vride.model.VirtusaBranch;
 
 public interface PoolingRepository extends JpaRepository<Pooling,Long>{
     public Collection<Pooling> findByDestinationLocation(VirtusaBranch virtusaBranch);
     public Pooling findByPoolingId(Long id);
+    public Collection<Pooling> findByEmployee(Employee employee);
 }
