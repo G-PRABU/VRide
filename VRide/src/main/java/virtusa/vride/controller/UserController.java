@@ -92,6 +92,8 @@ public class UserController {
 			    user.setUserPassword(request.get("password"));
 			    userRepository.save(user);
 			    return ResponseEntity.ok().body(employeeRepository.findByEmpId(request.get("id")));
+			} else {
+				return new ResponseEntity<>(HttpStatus.FOUND);
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
