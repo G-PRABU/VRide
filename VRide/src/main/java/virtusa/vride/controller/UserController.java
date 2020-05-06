@@ -86,11 +86,13 @@ public class UserController {
 	@PostMapping("/user/signup/")
 	ResponseEntity<?> createUser(@RequestBody HashMap<String,String> request) throws URISyntaxException{
 		if(employeeRepository.findById(request.get("id")).isPresent()) {
-			User user = new User();
-			user.setEmployee(employeeRepository.findByEmpId(request.get("id")));
-			user.setUserPassword(request.get("password"));
-			userRepository.save(user);
-			return ResponseEntity.ok().body(employeeRepository.findByEmpId(request.get("id")));
+			if(!userRepository.findByEmployee(employeeRepository.findByEmpId(request.get("id"))).isPresent()) {
+			    User user = new User();
+			    user.setEmployee(employeeRepository.findByEmpId(request.get("id")));
+			    user.setUserPassword(request.get("password"));
+			    userRepository.save(user);
+			    return ResponseEntity.ok().body(employeeRepository.findByEmpId(request.get("id")));
+			}
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
