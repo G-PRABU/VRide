@@ -82,7 +82,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/user/signup/")
+	@PostMapping("/user/signup")
 	ResponseEntity<?> createUser(@RequestBody HashMap<String,String> request) throws URISyntaxException{
 		if(employeeRepository.findById(request.get("id")).isPresent()) {
 			if(!userRepository.findByEmployee(employeeRepository.findByEmpId(request.get("id"))).isPresent()) {
@@ -134,7 +134,7 @@ public class UserController {
 		return ResponseEntity.created(new URI("/api/location/"+result.getLocationId())).body(result);
 	}
 	
-	@PostMapping("/add/car/")
+	@PostMapping("/add/car")
 	ResponseEntity<Car> addCar(@Valid @RequestBody Car car) throws URISyntaxException {
 		Car result = carRepository.save(car);
 		return ResponseEntity.created(new URI("/api/car/"+result.getCarId())).body(result);
