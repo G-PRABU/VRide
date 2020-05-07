@@ -3,10 +3,12 @@ package virtusa.vride.controller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,6 +65,16 @@ public class PoolingController {
     	return poolingRepository.findByEmployee(employeeRepository.findByEmpId(empid));
     }
     
+    @GetMapping("pooling/{id}")
+    public ResponseEntity<?> getPooling(@PathVariable Long id){
+    	Optional<Pooling> pooling = poolingRepository.findById(id); 
+    	if(pooling.isPresent()) {
+    		return ResponseEntity.ok().body(pooling.get());
+    	} else {
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    }
+
     @PutMapping("/update/pooling/")
     public ResponseEntity<Pooling> updatePooling(@Valid @RequestBody Pooling pooling){
     	Pooling result = poolingRepository.save(pooling);

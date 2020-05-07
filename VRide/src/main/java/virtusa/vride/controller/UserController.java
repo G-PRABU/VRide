@@ -113,7 +113,7 @@ public class UserController {
 
 	@DeleteMapping("/user/delete/{empid}")
 	ResponseEntity<?> userDelete(@PathVariable String empid) {
-		if(!userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
+		if(userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
 			Optional<User> user =userRepository.findByEmployee(employeeRepository.findByEmpId(empid));
 			userRepository.deleteById(user.get().getUserId());
 			return new ResponseEntity<>(HttpStatus.OK);
