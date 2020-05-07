@@ -53,12 +53,12 @@ public class PoolingController {
         return ResponseEntity.created(new URI("/api/pooling" + result.getPoolingId())).body(result); 
     }
     
-    @GetMapping("/poolings/{id}")
+    @GetMapping("/poolings/destination/{id}")
     public Collection<Pooling> getPoolings(@PathVariable Long id){
     	return poolingRepository.findByDestinationLocation(virtusaBranchRepository.findByBranchId(id));
     }
     
-    @GetMapping("/poolings/{empid}")
+    @GetMapping("/poolings/provider/{empid}")
     public Collection<Pooling> getUserPoolings(@PathVariable String empid){
     	return poolingRepository.findByEmployee(employeeRepository.findByEmpId(empid));
     }

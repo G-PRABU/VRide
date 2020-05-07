@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import virtusa.vride.model.Car;
-import virtusa.vride.model.Employee;
 import virtusa.vride.model.Location;
 import virtusa.vride.model.User;
 import virtusa.vride.repository.CarRepository;
@@ -110,6 +109,17 @@ public class UserController {
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@DeleteMapping("/user/delete/{empid}")
+	ResponseEntity<?> userDelete(@PathVariable String empid) {
+		if(!userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
+			Optional<User> user =userRepository.findByEmployee(employeeRepository.findByEmpId(empid));
+			userRepository.deleteById(user.get().getUserId());
+			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping("/employee/{id}")
