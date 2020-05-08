@@ -2,7 +2,10 @@ package virtusa.vride.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.temporal.ChronoField;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -50,7 +53,7 @@ public class PoolingController {
 	}
 	
     @PostMapping("/add/pooling")
-    public ResponseEntity<Pooling> createPooling(@Valid @RequestBody Pooling pooling) throws URISyntaxException{
+    public ResponseEntity<?> createPooling(@Valid @RequestBody Pooling pooling) throws URISyntaxException{
         Pooling result = poolingRepository.save(pooling);
         return ResponseEntity.created(new URI("/api/pooling" + result.getPoolingId())).body(result); 
     }
@@ -88,9 +91,12 @@ public class PoolingController {
     }
     
     @PostMapping("/add/rider")
-    public ResponseEntity<Pooling> createRider(@Valid @RequestBody Pooling pooling) throws URISyntaxException{
-        Pooling result = poolingRepository.save(pooling);
-        return ResponseEntity.created(new URI("/api/pooling" + result.getPoolingId())).body(result); 
+    public ResponseEntity<Rider> createRider(@Valid @RequestBody Rider rider) throws URISyntaxException{
+        Rider result = riderRepository.save(rider);
+        Pooling pooling = result.getPooling();
+        pooling.riderBooked();
+        poolingRepository.save(pooling);
+        return ResponseEntity.created(new URI("/api/rider" + result.getRiderId())).body(result); 
     }
     
     @GetMapping("/rider/{id}")

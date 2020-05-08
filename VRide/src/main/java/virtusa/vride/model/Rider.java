@@ -1,14 +1,10 @@
 package virtusa.vride.model;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 public class Rider {
@@ -18,12 +14,6 @@ public class Rider {
 	
 	@ManyToOne
 	private Location startLocation;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date startTime;
-	
-	@ManyToOne
-	private VirtusaBranch destinationLocation;
 	
 	@ManyToOne
 	private Employee employee;
@@ -37,14 +27,6 @@ public class Rider {
 	
 	public void setStartLocation(Location startLocation) {
 		this.startLocation = startLocation;
-	}
-	
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-	
-	public void setDestinationLoction(VirtusaBranch destinationLocation) {
-		this.destinationLocation = destinationLocation;
 	}
 	
 	public void setEmployee(Employee employee) {
@@ -61,14 +43,6 @@ public class Rider {
 	
 	public Location getStartLocation() {
 		return startLocation;
-	}
-	
-	public Date getStartTime() {
-		return startTime;
-	}
-	
-	public VirtusaBranch getDestinationLocation() {
-		return destinationLocation;
 	}
 	
 	public Employee getEmployee() {

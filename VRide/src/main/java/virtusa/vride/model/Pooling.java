@@ -1,5 +1,6 @@
 package virtusa.vride.model;
 
+import java.time.Instant;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -21,8 +22,13 @@ public class Pooling {
 	@ManyToOne
 	private Location startLocation;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date startTime;
+	@NotNull
+	private Instant startTime;
+	
+	@NotNull
+	private Boolean withReturn;
+	
+	private Instant returnTime;
 	
 	@NotNull
 	private Float costPerHead;
@@ -51,8 +57,16 @@ public class Pooling {
 		this.startLocation = startLocation;
 	}
 	
-	public void setStartTime(Date startTime) {
+	public void setStartTime(Instant startTime) {
 		this.startTime = startTime;
+	}
+	
+	public void setWithReturn(Boolean withReturn) {
+		this.withReturn = withReturn;
+	}
+	
+	public void setReturnTime(Instant returnTime) {
+		this.returnTime = returnTime;
 	}
 	
 	public void setDestinationLoction(VirtusaBranch destinationLocation) {
@@ -78,12 +92,21 @@ public class Pooling {
 	public Float getCostPerHead() {
 		return costPerHead;
 	}
+	
 	public Location getStartLocation() {
 		return startLocation;
 	}
 	
-	public Date getStartTime() {
+	public Instant getStartTime() {
 		return startTime;
+	}
+	
+	public Boolean getWithReturn() {
+		return withReturn;
+	}
+	
+	public Instant getReturnTime() {
+		return returnTime;
 	}
 	
 	public VirtusaBranch getDestinationLocation() {
