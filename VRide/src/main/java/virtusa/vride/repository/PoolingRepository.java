@@ -1,8 +1,6 @@
 package virtusa.vride.repository;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +12,7 @@ import virtusa.vride.model.VirtusaBranch;
 public interface PoolingRepository extends JpaRepository<Pooling,Long>{
     
 	@Query("SELECT p FROM Pooling p WHERE p.destinationLocation = ?1 AND p.availableSeats > 0 ORDER BY costPerHead")
-	public List<Pooling> findByDestinationLocation(VirtusaBranch virtusaBranch);
+	public Collection<Pooling> findByDestinationLocation(VirtusaBranch virtusaBranch);
    
 	public Pooling findByPoolingId(Long id);
     

@@ -128,4 +128,8 @@ public class Pooling {
 	public void riderBooked() {
 		availableSeats--;
 	}
+	
+	public void riderCancelled() {
+		availableSeats++;
+	}
 }

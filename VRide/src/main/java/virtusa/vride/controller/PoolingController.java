@@ -2,10 +2,7 @@ package virtusa.vride.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Instant;
-import java.time.temporal.ChronoField;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -29,6 +26,7 @@ import virtusa.vride.repository.EmployeeRepository;
 import virtusa.vride.repository.PoolingRepository;
 import virtusa.vride.repository.RiderRepository;
 import virtusa.vride.repository.VirtusaBranchRepository;
+import virtusa.vride.services.NotificationMailService;
 
 @RestController
 @RequestMapping("/api")
@@ -46,6 +44,8 @@ public class PoolingController {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
+	@Autowired
+	private NotificationMailService notificationMailService;
 	
 	@GetMapping("/pooling/destination")
 	public Collection<VirtusaBranch> getDistination() {
@@ -86,6 +86,12 @@ public class PoolingController {
     
     @DeleteMapping("/delete/pooling/{id}")
     public ResponseEntity<?> deletePooing(@PathVariable Long id){
+    	Pooling pooling = poolingRepository.findByPoolingId(id);
+    	Collection<Rider> riders = riderRepository.findByPooling(pooling);
+    	notificationMailService.sendPoolingCancelationMail(pooling,riders);
+    	riders.stream().forEach(r->{
+    		riderRepository.deleteById(r.getRiderId());
+    	});
     	poolingRepository.deleteById(id);
     	return ResponseEntity.ok().build();
     }
@@ -96,6 +102,7 @@ public class PoolingController {
         Pooling pooling = result.getPooling();
         pooling.riderBooked();
         poolingRepository.save(pooling);
+        notificationMailService.sendRiderConfirmationMail(result);
         return ResponseEntity.created(new URI("/api/rider" + result.getRiderId())).body(result); 
     }
     
@@ -104,14 +111,13 @@ public class PoolingController {
     	return riderRepository.findByPooling(poolingRepository.findByPoolingId(id));
     }
     
-    @PutMapping("/update/rider/")
-    public ResponseEntity<Rider> updateRider(@Valid @RequestBody Rider rider){
-    	Rider result = riderRepository.save(rider);
-    	return ResponseEntity.ok().body(result);
-    }
-    
     @DeleteMapping("/delete/rider/{id}")
     public ResponseEntity<?> deleteRider(@PathVariable Long id){
+    	Rider rider = riderRepository.findById(id).get();
+    	Pooling pooling = rider.getPooling();
+    	pooling.riderCancelled();
+    	poolingRepository.save(pooling);
+    	notificationMailService.sendRiderCancelationMail(rider);
     	riderRepository.deleteById(id);
     	return ResponseEntity.ok().build();
     }
