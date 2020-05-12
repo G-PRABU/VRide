@@ -2,6 +2,8 @@ package virtusa.vride.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -60,7 +62,8 @@ public class PoolingController {
     
     @GetMapping("/poolings/destination/{id}")
     public Collection<Pooling> getPoolings(@PathVariable Long id){
-    	return poolingRepository.findByDestinationLocation(virtusaBranchRepository.findByBranchId(id));
+    	Instant currentTime = Instant.now().plus(Duration.ofHours(2));
+    	return poolingRepository.findByDestinationLocation(virtusaBranchRepository.findByBranchId(id),currentTime);
     }
     
     @GetMapping("/poolings/provider/{empid}")
@@ -81,6 +84,8 @@ public class PoolingController {
     @PutMapping("/update/pooling/")
     public ResponseEntity<Pooling> updatePooling(@Valid @RequestBody Pooling pooling){
     	Pooling result = poolingRepository.save(pooling);
+    	Collection<Rider> riders  = riderRepository.findByPooling(result);
+    	notificationMailService.sendPoolingModifiedMail(result,riders);
     	return ResponseEntity.ok().body(result);
     }
     
@@ -88,7 +93,7 @@ public class PoolingController {
     public ResponseEntity<?> deletePooing(@PathVariable Long id){
     	Pooling pooling = poolingRepository.findByPoolingId(id);
     	Collection<Rider> riders = riderRepository.findByPooling(pooling);
-    	notificationMailService.sendPoolingCancelationMail(pooling,riders);
+    	notificationMailService.sendPoolingCancellationMail(pooling,riders);
     	riders.stream().forEach(r->{
     		riderRepository.deleteById(r.getRiderId());
     	});
@@ -106,9 +111,14 @@ public class PoolingController {
         return ResponseEntity.created(new URI("/api/rider" + result.getRiderId())).body(result); 
     }
     
-    @GetMapping("/rider/{id}")
-    public Collection<Rider> getRiders(@PathVariable Long id){
+    @GetMapping("/rider/pooling/{id}")
+    public Collection<Rider> getRidersByPooling(@PathVariable Long id){
     	return riderRepository.findByPooling(poolingRepository.findByPoolingId(id));
+    }
+    
+    @GetMapping("/rider/{empid}")
+    public Collection<Rider> getRidersByEmployee(@PathVariable String empid){
+    	return riderRepository.findByEmployee(employeeRepository.findByEmpId(empid));
     }
     
     @DeleteMapping("/delete/rider/{id}")

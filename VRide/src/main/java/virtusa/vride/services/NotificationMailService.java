@@ -26,6 +26,8 @@ public class NotificationMailService {
 	
 	private static final String VRIDE_SUBJECT_CANCELLATION = "VRIDE CANCELLATION";
 
+	private static final String VRIDE_SUBJECT_MODIFIED = "VRIDE MODIFIED";
+	
 	private static final String VRIDE_SUBJECT_BOOKING = "VRIDE BOOKED";
 	
 	public void sendOTPNotificationMail(Employee employee, Integer otp) throws MailException {
@@ -38,7 +40,25 @@ public class NotificationMailService {
 		javaMailSender.send(mail);
 	}
 	
-	public void sendPoolingCancelationMail(Pooling pooling,Collection<Rider> riders) {
+	public void sendPoolingModifiedMail(Pooling pooling,Collection<Rider> riders) {
+	    riders.stream().forEach(r->{
+	    	SimpleMailMessage mail = new SimpleMailMessage();
+		    mail.setTo(r.getEmployee().getEmpEmail());
+		    mail.setFrom(FROM_MAIL);
+		    mail.setSubject(VRIDE_SUBJECT_MODIFIED);
+		    mail.setText(r.getEmployee().getEmpName()+" Your ride on "+ Date.from(r.getPooling().getStartTime()) + "has been modified by provider.  please check "
+		    		+ "your ride detailes for conformation.");
+		    javaMailSender.send(mail);
+	    });
+	    SimpleMailMessage mail = new SimpleMailMessage();
+	    mail.setTo(pooling.getEmployee().getEmpEmail());
+	    mail.setFrom(FROM_MAIL);
+	    mail.setSubject(VRIDE_SUBJECT_MODIFIED);
+	    mail.setText(pooling.getEmployee().getEmpName()+" Your ride on "+ Date.from(pooling.getStartTime()) + "has been modified.");
+	    javaMailSender.send(mail);
+	}
+	
+	public void sendPoolingCancellationMail(Pooling pooling,Collection<Rider> riders) {
 	    riders.stream().forEach(r->{
 	    	SimpleMailMessage mail = new SimpleMailMessage();
 		    mail.setTo(r.getEmployee().getEmpEmail());
