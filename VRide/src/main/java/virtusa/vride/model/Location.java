@@ -14,7 +14,10 @@ public class Location {
 	private Long locationId;
     
     @NotNull
-    private String locationName;
+    private String locationNickName;
+    
+    @NotNull 
+    private String locationAddress;
     
     @NotNull
     private Double locationLatitude;
@@ -29,8 +32,12 @@ public class Location {
     	this.locationId = locationId;
     }
     
-    public void setLocationName(String locationName) {
-    	this.locationName = locationName;
+    public void setLocationNickName(String locationNickName) {
+    	this.locationNickName = locationNickName;
+    }
+    
+    public void setLocationAddress(String locationAddress) {
+        this.locationAddress = locationAddress;	
     }
     
     public void setLocationLatitude(Double locationLatitude) {
@@ -49,8 +56,12 @@ public class Location {
     	return locationId;
     }
     
-    public String getLocationName() {
-    	return locationName;
+    public String getLocationNickName() {
+    	return locationNickName;
+    }
+    
+    public String getLocationAddress() {
+    	return locationAddress;
     }
     
     public Double getLocationLatitude() {

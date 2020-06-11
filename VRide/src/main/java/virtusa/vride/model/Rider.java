@@ -5,12 +5,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Rider {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long riderId;
+	
+	@NotNull
+	private boolean isPaid;
 	
 	@ManyToOne
 	private Location startLocation;
@@ -23,6 +27,10 @@ public class Rider {
 	
 	public void setRiderId(Long riderId) {
 		this.riderId = riderId;
+	}
+	
+	public void setIsPaid(boolean isPaid) {
+	    this.isPaid = isPaid;	
 	}
 	
 	public void setStartLocation(Location startLocation) {
@@ -39,6 +47,10 @@ public class Rider {
 	
 	public Long getRiderId() {
 		return riderId;
+	}
+	
+	public boolean getIsPaid() {
+		return isPaid;
 	}
 	
 	public Location getStartLocation() {

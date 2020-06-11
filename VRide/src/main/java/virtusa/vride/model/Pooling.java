@@ -30,6 +30,9 @@ public class Pooling {
 	@NotNull
 	private Float costPerHead;
 	
+	@NotNull
+	private boolean isCompleted;
+	
 	@ManyToOne
 	private VirtusaBranch destinationLocation;
 	
@@ -64,6 +67,10 @@ public class Pooling {
 	
 	public void setReturnTime(Instant returnTime) {
 		this.returnTime = returnTime;
+	}
+	
+	public void setIsCompleted(boolean isCompleted) {
+	    this.isCompleted = isCompleted;	
 	}
 	
 	public void setDestinationLoction(VirtusaBranch destinationLocation) {
@@ -104,6 +111,10 @@ public class Pooling {
 	
 	public Instant getReturnTime() {
 		return returnTime;
+	}
+	
+	public boolean getIsCompleted() {
+		return isCompleted;
 	}
 	
 	public VirtusaBranch getDestinationLocation() {
